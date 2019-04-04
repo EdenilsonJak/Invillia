@@ -20,8 +20,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
-import org.springframework.lang.NonNull;
+import javax.validation.constraints.NotNull;
 
 import com.invillia.status.OrderStatus;
 
@@ -38,17 +37,20 @@ public class Order implements Serializable{
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
-	@NonNull
+	@NotNull
 	private String endereco;
 
 	@Column(name="dataorder")
 	private Date dataOrder;
 	
 	@Enumerated(EnumType.STRING)
-	private OrderStatus orderStatus;
+	private OrderStatus orderstatus;
 	
 	@OneToOne(fetch=FetchType.EAGER)
 	private Payment payment;
+	
+	private Date momentreembolso;
+
 	
 	@OneToMany(mappedBy = "order", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	private List<OrderItem> itens;
@@ -81,12 +83,12 @@ public class Order implements Serializable{
 		this.dataOrder = dataOrder;
 	}
 
-	public OrderStatus getOrderStatus() {
-		return orderStatus;
+	public OrderStatus getOrderstatus() {
+		return orderstatus;
 	}
 
-	public void setOrderStatus(OrderStatus orderStatus) {
-		this.orderStatus = orderStatus;
+	public void setOrderstatus(OrderStatus orderstatus) {
+		this.orderstatus = orderstatus;
 	}
 
 	public Payment getPayment() {
@@ -105,11 +107,19 @@ public class Order implements Serializable{
 	public void setItens(List<OrderItem> itens) {
 		this.itens = itens;
 	}
+	
+	public Date getMomentreembolso() {
+		return momentreembolso;
+	}
+
+	public void setMomentreembolso(Date momentreembolso) {
+		this.momentreembolso = momentreembolso;
+	}
 
 	@Transient
 	public void checkReembolso() {
-		if(this.orderStatus.ACCOMPLISHED.equals(OrderStatus.ACCOMPLISHED)) {
-			if(this.payment.getOrderStatus().CONFIRMATION_PAYMENT.equals(OrderStatus.CONFIRMATION_PAYMENT)) {
+		if(this.orderstatus.ACCOMPLISHED.equals(OrderStatus.ACCOMPLISHED)) {
+			if(this.payment.getPaymentstatus().CONFIRMATION_PAYMENT.equals(OrderStatus.CONFIRMATION_PAYMENT)) {
 				LocalDate instant = dataOrder.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 				if(instant.lengthOfMonth() > 10) {
 					System.out.println("Pedido não pode ser reembolsado");
@@ -154,8 +164,11 @@ public class Order implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Order [id=" + id + ", endereco=" + endereco + ", data=" + dataOrder + "]";
+		return "Order [id=" + id + ", endereco=" + endereco + ", dataOrder=" + dataOrder + ", orderstatus="
+				+ orderstatus + ", payment=" + payment + "]";
 	}
+
+	
 	
 
 }

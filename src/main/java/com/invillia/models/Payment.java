@@ -29,7 +29,7 @@ public class Payment implements Serializable {
 	private Long id;
 	
 	@Enumerated(EnumType.STRING)
-	private OrderStatus orderStatus;
+	private OrderStatus paymentstatus;
 	
 	private Date momentpgto;
 	
@@ -49,12 +49,12 @@ public class Payment implements Serializable {
 		this.id = id;
 	}
 
-	public OrderStatus getOrderStatus() {
-		return orderStatus;
+	public OrderStatus getPaymentstatus() {
+		return paymentstatus;
 	}
 
-	public void setOrderStatus(OrderStatus orderStatus) {
-		this.orderStatus = orderStatus;
+	public void setPaymentstatus(OrderStatus paymentstatus) {
+		this.paymentstatus = paymentstatus;
 	}
 
 	public Date getMomentpgto() {
@@ -81,7 +81,6 @@ public class Payment implements Serializable {
 		this.order = order;
 	}
 
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -109,7 +108,7 @@ public class Payment implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Payment [id=" + id + ", orderStatus=" + orderStatus + ", momentpgto=" + momentpgto + ", numCredito="
+		return "Payment [id=" + id + ", orderStatus=" + paymentstatus + ", momentpgto=" + momentpgto + ", numCredito="
 				+ numCredito + "]";
 	}
 

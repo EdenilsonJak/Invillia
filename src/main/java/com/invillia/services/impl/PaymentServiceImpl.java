@@ -8,12 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.invillia.models.Payment;
-import com.invillia.models.Store;
-import com.invillia.repository.OrderRepository;
 import com.invillia.repository.PaymentRepository;
-import com.invillia.repository.StoreRepository;
 import com.invillia.services.PaymentService;
-import com.invillia.services.StoreService;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -34,4 +30,5 @@ public class PaymentServiceImpl implements PaymentService {
 		log.info("cadastrar payment: {}", payment);
 		return this.paymentRepository.save(payment);
 	}
+
 }

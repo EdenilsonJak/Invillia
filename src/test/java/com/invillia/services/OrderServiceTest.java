@@ -48,7 +48,7 @@ public class OrderServiceTest {
 		order.setId(1L);
 		order.setDataOrder(new Date());
 		order.setEndereco("Av. moaçara");
-		order.setOrderStatus(OrderStatus.PROCESSING);
+		order.setOrderstatus(OrderStatus.PROCESSING);
 		return order;
 	}
 

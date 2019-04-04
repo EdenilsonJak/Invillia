@@ -2,7 +2,7 @@
  		id bigint not null auto_increment,
  		endereco varchar(255),
  		dataorder date,
- 		orderStatus varchar(255),
+ 		orderstatus varchar(255),
  		payment_id bigint,
  		primary key (id)
  		);
@@ -20,7 +20,7 @@
        id bigint not null auto_increment,
         momentpgto datetime,
         num_credito bigint,
-        order_status varchar(255),
+        paymentstatus varchar(255),
         order_id bigint,
         primary key (id)
     );

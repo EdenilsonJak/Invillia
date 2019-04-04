@@ -85,7 +85,7 @@ public class OrderRepositoryTest {
 		Order pedido = new Order();
 		pedido.setDataOrder(new Date());
 		pedido.setEndereco("av. marechal");
-		pedido.setOrderStatus(OrderStatus.PENDING_PAYMENT);
+		pedido.setOrderstatus(OrderStatus.PENDING_PAYMENT);
 		pedido.setPayment(pgto);
 		
 		return pedido;
@@ -96,7 +96,7 @@ public class OrderRepositoryTest {
 		
 		payment.setMomentpgto(new Date());
 		payment.setNumCredito(new Long(1234456));
-		payment.setOrderStatus(OrderStatus.PENDING_PAYMENT);
+		payment.setPaymentstatus(OrderStatus.PENDING_PAYMENT);
 		return payment;
 	}
 	

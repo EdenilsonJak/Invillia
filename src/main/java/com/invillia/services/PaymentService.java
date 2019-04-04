@@ -21,8 +21,6 @@ public interface PaymentService {
 	 */
 	
 	Payment persistir(Payment payment);
-	
-	
-	
+
 	
 }
