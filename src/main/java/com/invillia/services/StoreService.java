@@ -22,5 +22,13 @@ public interface StoreService {
 	
 	Store persistir(Store store);
 	
+	/**]
+	 * Buscar por um Id
+	 * @param id
+	 * @return
+	 */
+	Optional<Store> buscarPorId(Long id);
+	
+	
 	
 }

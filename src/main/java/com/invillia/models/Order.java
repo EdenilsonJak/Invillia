@@ -1,6 +1,8 @@
 package com.invillia.models;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.springframework.lang.NonNull;
 
@@ -103,6 +106,22 @@ public class Order implements Serializable{
 		this.itens = itens;
 	}
 
+	@Transient
+	public void checkReembolso() {
+		if(this.orderStatus.ACCOMPLISHED.equals(OrderStatus.ACCOMPLISHED)) {
+			if(this.payment.getOrderStatus().CONFIRMATION_PAYMENT.equals(OrderStatus.CONFIRMATION_PAYMENT)) {
+				LocalDate instant = dataOrder.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				if(instant.lengthOfMonth() > 10) {
+					System.out.println("Pedido não pode ser reembolsado");
+				}
+				else {
+					System.out.println("Pedido pode ser reembolsado");
+				}
+			}
+			
+		}
+	}
+	
 	@PrePersist
 	public void prePersist() {
 		this.dataOrder = new Date();

@@ -8,5 +8,5 @@ import com.invillia.models.Payment;
 
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
-	Optional<Payment> findById(Long id); 
+	Optional<Payment> findById(Long id);
 }

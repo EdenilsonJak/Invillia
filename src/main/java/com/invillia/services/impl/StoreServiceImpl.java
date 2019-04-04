@@ -31,4 +31,10 @@ public class StoreServiceImpl implements StoreService{
 		return this.storeRepository.save(store);
 	}
 
+	@Override
+	public Optional<Store> buscarPorId(Long id) {
+		return this.storeRepository.findById(id);
+	}
+
+
 }

@@ -9,5 +9,6 @@ import com.invillia.models.Store;
 public interface StoreRepository extends JpaRepository<Store, Long> {
 
 	Optional<Store> findByNome(String nome);
+
 	
 }

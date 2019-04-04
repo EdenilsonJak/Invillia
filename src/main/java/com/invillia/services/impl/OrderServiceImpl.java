@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.invillia.models.Order;
+import com.invillia.models.Payment;
 import com.invillia.repository.OrderRepository;
 import com.invillia.services.OrderService;
 import com.invillia.services.StoreService;
@@ -36,6 +37,11 @@ public class OrderServiceImpl implements OrderService{
 	public Optional<Order> buscarPorId(Long id) {
 		log.info("buscando pedido por id: {}", id);
 		return this.orderRepository.findById(id);
+	}
+
+	@Override
+	public Order buscarPorIdPaymente(Long id) {
+		return this.orderRepository.paymentPorOrder(id);
 	}
 
 }

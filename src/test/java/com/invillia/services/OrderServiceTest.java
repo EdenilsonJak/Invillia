@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Date;
 import java.util.Optional;
 
 import org.junit.Before;
@@ -19,6 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.invillia.models.Order;
 import com.invillia.repository.OrderRepository;
+import com.invillia.status.OrderStatus;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -31,16 +33,25 @@ public class OrderServiceTest {
 	@Autowired
 	private OrderService orderService;
 	
-	private static final String nome = "E.J.SISTEMAS";
+	private static final String nome = "av. moaçara";
 	
 	@Before
 	public void setUp() throws Exception{
-		//BDDMockito.given(this.storeRepository.findByNome(Mockito.anyString())).willReturn(new Store());
+		BDDMockito.given(this.orderService.buscarPorEndereco(Mockito.anyString())).willReturn(obterDadosOrder());
 		BDDMockito.given(this.orderRepository.save(Mockito.any(Order.class))).willReturn(new Order());
 		BDDMockito.given(this.orderRepository.findByEndereco(Mockito.anyString())).willReturn(new Order());
-		//BDDMockito.given(this.orderRepository.findById(Mockito.any())).toString();
+		BDDMockito.given(this.orderRepository.findById(Mockito.any())).toString();
 	}
 	
+	private Order obterDadosOrder() {
+		Order order = new Order();
+		order.setId(1L);
+		order.setDataOrder(new Date());
+		order.setEndereco("Av. moaçara");
+		order.setOrderStatus(OrderStatus.PROCESSING);
+		return order;
+	}
+
 	/*
 	 * @Test public void testBuscarStoreNome() { Optional<Store> store =
 	 * this.storeService.buscarPorNome(nome); assertTrue(store.isPresent()); }
@@ -55,9 +66,9 @@ public class OrderServiceTest {
 	
 	@Test
 	public void testBuscarPorEndereco() {
-		Order order = this.orderService.buscarPorEndereco("E.J.SISTEMAS");
+		Order order = this.orderService.buscarPorEndereco("av. moaçara");
 		
-		assertEquals("E.J.SISTEMAS", order.getEndereco());
+		assertEquals(nome, order.getEndereco());
 	}
 
 	@Test

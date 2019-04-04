@@ -26,4 +26,11 @@ public interface OrderService {
 	 * @return
 	 */
 	Optional<Order> buscarPorId(Long id);
+
+	/**
+	 * Buscar pedido por id payment
+	 * @param id
+	 * @return
+	 */
+	Order buscarPorIdPaymente(Long id);
 }
