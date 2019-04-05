@@ -112,8 +112,6 @@ public class OrderController {
 		Response<CadastroOrderDto> response = new Response<CadastroOrderDto>();
 		Optional<Order> order = this.orderService.buscarPorId(id);
 		
-		//checkaPayment(order);
-		
 		if(!order.isPresent()){
 			log.info("Pedido não encontrado para o ID: {}", id);
 			response.getErros().add("Pedido não encontrado para o Id " + id);
@@ -131,11 +129,6 @@ public class OrderController {
 			return payment.get().getId();
 		}
 		return null;
-	}
-
-
-	private void checkaPayment(Optional<Order> order) {
-		
 	}
 
 
