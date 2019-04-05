@@ -111,6 +111,7 @@ public class OrderController {
 		log.info("Buscando Order por ID: {}", id);
 		Response<CadastroOrderDto> response = new Response<CadastroOrderDto>();
 		Optional<Order> order = this.orderService.buscarPorId(id);
+		
 		//checkaPayment(order);
 		
 		if(!order.isPresent()){
@@ -124,7 +125,17 @@ public class OrderController {
 	}
 	
 	
+	private Long confirmarIdPayment(Long id) {
+		Optional<Payment> payment = this.paymentService.buscarPorOrderId(id);
+		if(payment.isPresent()) {
+			return payment.get().getId();
+		}
+		return null;
+	}
+
+
 	private void checkaPayment(Optional<Order> order) {
+		
 	}
 
 
@@ -134,6 +145,7 @@ public class OrderController {
 		storeDto.setDataOrder(this.dateFormat.format(order.getDataOrder()));
 		storeDto.setOrderStatus(order.getOrderstatus().toString());
 		storeDto.setEndereco(order.getEndereco());
+		storeDto.setPaymentId(confirmarIdPayment(order.getId()));
 		return storeDto;
 		
 		

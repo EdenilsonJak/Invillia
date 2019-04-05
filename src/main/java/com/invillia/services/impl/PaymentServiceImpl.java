@@ -31,4 +31,10 @@ public class PaymentServiceImpl implements PaymentService {
 		return this.paymentRepository.save(payment);
 	}
 
+	@Override
+	public Optional<Payment> buscarPorOrderId(Long id) {
+		log.info("consulta payment por id Order: {}", id);
+		return this.paymentRepository.findByOrderId(id);
+	}
+
 }

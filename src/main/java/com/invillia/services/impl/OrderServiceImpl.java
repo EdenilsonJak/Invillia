@@ -39,7 +39,9 @@ public class OrderServiceImpl implements OrderService{
 	}
 
 	@Override
-	public Order buscarPorIdPaymente(Long id) {
-		return this.orderRepository.paymentPorOrder(id);
+	public Optional<Order> buscarPorIdPayment(Long id) {
+		return this.orderRepository.findByPaymentId(id);
 	}
+
+
 }

@@ -23,6 +23,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	
 	Order findByEndereco(String nome);
 	
+	Optional<Order> findByPaymentId(@Param("paymentId") Long id);
+	
+	
 	//query native
 	@Query(
 		value="select * from order o where o.payment.id = :paymentId",
