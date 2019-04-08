@@ -2,6 +2,8 @@ package com.invillia.dtos;
 
 import java.util.Optional;
 
+import javax.validation.constraints.NotNull;
+
 public class CadastroOrderItemDto {
 
 	private Optional<Long> id = Optional.empty();
@@ -45,6 +47,7 @@ public class CadastroOrderItemDto {
 		this.qtd = qtd;
 	}
 
+	@NotNull(message="Código Order é obrigatório")
 	public Long getOrderId() {
 		return orderId;
 	}
