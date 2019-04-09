@@ -69,6 +69,7 @@ public class OrderItemController {
 
 	private CadastroOrderItemDto converteOrderItemDTO(OrderItem orderItem) {
 		CadastroOrderItemDto cadastroOrderItemDto = new CadastroOrderItemDto();
+		cadastroOrderItemDto.setId(Optional.of(orderItem.getId()));
 		cadastroOrderItemDto.setDescription(orderItem.getDescription());
 		cadastroOrderItemDto.setQtd(orderItem.getQtd().toString());
 		cadastroOrderItemDto.setUnitValue(orderItem.getUnitValue().toString());

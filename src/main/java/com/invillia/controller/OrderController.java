@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +36,7 @@ import com.invillia.status.OrderStatus;
 public class OrderController {
 	
 	private static final Logger log = LoggerFactory.getLogger(OrderController.class);
-	private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 	@Autowired
 	private OrderService orderService;
@@ -85,7 +86,9 @@ public class OrderController {
 		@Valid @RequestBody CadastroOrderDto cadastroOrderDto, BindingResult result) throws ParseException {
 			log.info("Atualizando Order :{}", cadastroOrderDto.toString());
 			Response<CadastroOrderDto> response = new Response<CadastroOrderDto>();
-			//validaPayment();
+			if(cadastroOrderDto.getPaymentId() != null) {
+				validaOrderDto(cadastroOrderDto, result);
+			}
 			Order order = this.converterDtoParaOrder(cadastroOrderDto, result);
 			
 			if(result.hasErrors()){
@@ -100,6 +103,24 @@ public class OrderController {
 			
 		}
 	
+	private void validaOrderDto(@Valid CadastroOrderDto cadastroOrderDto, BindingResult result) {
+		Optional<Payment> payment = this.paymentService.buscarPorId(cadastroOrderDto.getId().get());
+		if(!payment.isPresent()) {
+			result.addError(new ObjectError("Order", "Código pagamento não existente."));
+		}
+		
+	}
+
+
+	private void validaPayment(@Valid CadastroOrderDto cadastroOrderDto, BindingResult result) {
+		Optional<Payment> payment = this.paymentService.buscarPorId(cadastroOrderDto.getPaymentId());;
+		if(payment.isPresent()) {
+			
+		}
+		
+	}
+
+
 	/**
 	 * Buscar Order por id
 	 * @param id
@@ -139,16 +160,30 @@ public class OrderController {
 		storeDto.setOrderStatus(order.getOrderstatus().toString());
 		storeDto.setEndereco(order.getEndereco());
 		storeDto.setPaymentId(confirmarIdPayment(order.getId()));
+		if(order.getMomentreembolso() != null) {
+			storeDto.setMomentreembolso(dateFormat.format(order.getMomentreembolso()));
+		}
 		return storeDto;
 		
 		
 	}
 
-	private Order converterDtoParaOrder(@Valid CadastroOrderDto cadastroOrderDto, BindingResult result) {
+	private Order converterDtoParaOrder(@Valid CadastroOrderDto cadastroOrderDto, BindingResult result) throws ParseException {
 		Order order = new Order();
+		if(cadastroOrderDto.getId().isPresent()) {
+			order.setId(cadastroOrderDto.getId().get());
+		}
+		if(confirmarIdPayment(cadastroOrderDto.getPaymentId()) != null) {
+			Payment payment = new Payment();
+			order.setPayment(payment);
+			order.getPayment().setId(cadastroOrderDto.getPaymentId());
+		}
 		order.setEndereco(cadastroOrderDto.getEndereco());
 		order.setOrderstatus(OrderStatus.valueOf(cadastroOrderDto.getOrderStatus()));
 		order.setDataOrder(new Date());
+		if(cadastroOrderDto.getMomentreembolso()!=null ) {
+			order.setMomentreembolso(dateFormat.parse(cadastroOrderDto.getMomentreembolso()));
+		}
 		
 		return order;
 	}

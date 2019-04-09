@@ -1,5 +1,6 @@
 package com.invillia.dtos;
 
+import java.util.Date;
 import java.util.Optional;
 
 import javax.validation.constraints.NotNull;
@@ -10,6 +11,7 @@ public class CadastroOrderDto {
 	private String endereco;
 	private String dataOrder;
 	private String orderStatus;
+	private String momentreembolso;
 	private Long paymentId;
 	
 	public CadastroOrderDto() {
@@ -54,6 +56,14 @@ public class CadastroOrderDto {
 
 	public void setPaymentId(Long paymentId) {
 		this.paymentId = paymentId;
+	}
+
+	public String getMomentreembolso() {
+		return momentreembolso;
+	}
+
+	public void setMomentreembolso(String momentreembolso) {
+		this.momentreembolso = momentreembolso;
 	}
 
 	@Override

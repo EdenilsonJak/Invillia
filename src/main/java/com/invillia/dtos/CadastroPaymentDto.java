@@ -7,6 +7,7 @@ public class CadastroPaymentDto {
 	private Optional<Long> id = Optional.empty();
 	private String paymentstatus;
 	private String numCredito;
+	private String momentpgto;
 	private Long orderId;
 	
 	public Optional<Long> getId() {
@@ -35,11 +36,19 @@ public class CadastroPaymentDto {
 	public void setOrderId(Long orderId) {
 		this.orderId = orderId;
 	}
+	
+	
+	public String getMomentpgto() {
+		return momentpgto;
+	}
+	public void setMomentpgto(String momentpgto) {
+		this.momentpgto = momentpgto;
+	}
 	@Override
 	public String toString() {
 		return "CadastroPaymentDto [id=" + id + ", paymentstatus=" + paymentstatus + ", numCredito=" + numCredito
-				+ ", orderId=" + orderId + "]";
+				+ ", momentpgto=" + momentpgto + ", orderId=" + orderId + "]";
 	}
-	
+
 	
 }

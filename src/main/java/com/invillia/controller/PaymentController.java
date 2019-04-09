@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,7 +50,7 @@ public class PaymentController {
 			BindingResult result) throws ParseException {
 		log.info("Adicionando Order: {}", cadastroPaymentDto.toString());
 		Response<CadastroPaymentDto> response = new Response<CadastroPaymentDto>();
-		validaOrder(cadastroPaymentDto, result);;
+		validaOrder(cadastroPaymentDto, result);
 		Payment payment = this.converterDtoParaPayment(cadastroPaymentDto, result);
 		
 		if(result.hasErrors()){
@@ -61,6 +62,53 @@ public class PaymentController {
 		payment = this.paymentService.persistir(payment);
 		response.setData(this.converterStoreDto(payment));
 		return ResponseEntity.ok(response);
+	}
+	
+	@PutMapping(value="/{id}")
+	public ResponseEntity<Response<CadastroPaymentDto>> atualizar(@Valid @RequestBody CadastroPaymentDto cadastroPaymentDto,
+			BindingResult result) throws ParseException {
+		log.info("Atualizando Payment: {}", cadastroPaymentDto.toString());
+		Response<CadastroPaymentDto> response = new Response<CadastroPaymentDto>();
+		Payment payment;
+		validaOrder(cadastroPaymentDto, result);
+		
+		payment = checkReembolso(cadastroPaymentDto, result);
+		payment = this.converterDtoParaPayment(cadastroPaymentDto, result);
+		
+		if(result.hasErrors()) {
+			log.error("Erro validando atualização: {}", cadastroPaymentDto.toString());
+			result.getAllErrors().forEach(error -> response.getErros().add(error.getDefaultMessage()));
+			return ResponseEntity.badRequest().body(response);
+		}
+		
+		payment = this.paymentService.persistir(payment);
+		response.setData(this.converterStoreDto(payment));
+		return ResponseEntity.ok(response);
+		
+	}
+		
+	
+	private Payment checkReembolso(@Valid CadastroPaymentDto cadastroPaymentDto, BindingResult result) throws ParseException {
+		Optional<Order> order;
+		Payment payment = new Payment();
+		if(cadastroPaymentDto.getOrderId()!=null) {
+			order = this.orderService.buscarPorId(cadastroPaymentDto.getOrderId());
+			if(order.get().checkReembolso()) {
+				payment.setId(cadastroPaymentDto.getId().get());
+				payment.setMomentpgto(dateFormat.parse(cadastroPaymentDto.getMomentpgto()));
+				payment.setNumCredito(new Long(cadastroPaymentDto.getNumCredito()));
+				payment.setPaymentstatus(OrderStatus.valueOf(cadastroPaymentDto.getPaymentstatus()));
+				return payment;
+			}else {
+				payment.setId(cadastroPaymentDto.getId().get());
+				payment.setMomentpgto(dateFormat.parse(cadastroPaymentDto.getMomentpgto()));
+				payment.setNumCredito(new Long(cadastroPaymentDto.getNumCredito()));
+				payment.setPaymentstatus(OrderStatus.valueOf(cadastroPaymentDto.getPaymentstatus()));
+				return payment;
+			}
+		}
+		return payment;
+		
 	}
 
 	private void validaOrder(@Valid CadastroPaymentDto cadastroPaymentDto, BindingResult result) {
@@ -83,19 +131,32 @@ public class PaymentController {
 		paymentDto.setId(Optional.of(payment.getId()));
 		paymentDto.setNumCredito(payment.getNumCredito().toString());
 		paymentDto.setPaymentstatus(payment.getPaymentstatus().toString());
+		paymentDto.setMomentpgto(dateFormat.format(payment.getMomentpgto()));
 		paymentDto.setOrderId(payment.getOrder().getId());
+		
 		
 		return paymentDto;
 	}
 
-	private Payment converterDtoParaPayment(@Valid CadastroPaymentDto cadastroPaymentDto, BindingResult result) {
+	private Payment converterDtoParaPayment(@Valid CadastroPaymentDto cadastroPaymentDto, BindingResult result) throws ParseException {
 		Payment payment = new Payment();
 		
-		payment.setMomentpgto(new Date());
+		if(cadastroPaymentDto.getMomentpgto()!=null) {
+			payment.setMomentpgto(dateFormat.parse(cadastroPaymentDto.getMomentpgto()));
+		}
+		else {
+			payment.setMomentpgto(new Date());
+		}
+		if(cadastroPaymentDto.getOrderId()!=null) {
+			payment.setOrder(new Order());
+			payment.getOrder().setId(cadastroPaymentDto.getOrderId());
+		}
+		if(cadastroPaymentDto.getId().isPresent()) {
+			payment.setId(cadastroPaymentDto.getId().get());
+		}
+
 		payment.setNumCredito(new Long(cadastroPaymentDto.getNumCredito()));
 		payment.setPaymentstatus(OrderStatus.valueOf(cadastroPaymentDto.getPaymentstatus()));
-		payment.setOrder(new Order());
-		payment.getOrder().setId(cadastroPaymentDto.getOrderId());
 		return payment;
 	}
 	

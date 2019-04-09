@@ -117,19 +117,18 @@ public class Order implements Serializable{
 	}
 
 	@Transient
-	public void checkReembolso() {
-		if(this.orderstatus.ACCOMPLISHED.equals(OrderStatus.ACCOMPLISHED)) {
+	public Boolean checkReembolso() {
+		if(this.orderstatus.CANCEL.equals(OrderStatus.CANCEL)) {
 			if(this.payment.getPaymentstatus().CONFIRMATION_PAYMENT.equals(OrderStatus.CONFIRMATION_PAYMENT)) {
 				LocalDate instant = dataOrder.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-				if(instant.lengthOfMonth() > 10) {
-					System.out.println("Pedido não pode ser reembolsado");
-				}
-				else {
-					System.out.println("Pedido pode ser reembolsado");
-				}
+				/* REVISÃO DE CÓDIGO PARA REEMBOLSO
+				 * O MESMO SERÁ ENVIADO PARA GITHUB
+				 * if(instant.lengthOfMonth() > 10) { return true; } else { return false; }
+				 */
 			}
 			
 		}
+		return false;
 	}
 	
 	@PrePersist
