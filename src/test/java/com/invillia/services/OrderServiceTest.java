@@ -41,7 +41,7 @@ public class OrderServiceTest {
 		BDDMockito.given(this.orderService.buscarPorEndereco(Mockito.anyString())).willReturn(obterDadosOrder());
 		// BDDMockito.given(this.orderRepository.findByEndereco(Mockito.anyString())).willReturn(new
 		// Order());
-		//BDDMockito.given(this.orderService.buscarPorId(Mockito.anyString())).willReturn(obterDadosOrder());
+		BDDMockito.given(this.orderService.buscarPorId(Mockito.anyLong())).willReturn(Optional.of(obterDadosOrder()));
 	}
 
 	private Order obterDadosOrder() {
@@ -72,10 +72,11 @@ public class OrderServiceTest {
 		assertEquals(nome, order.getEndereco());
 	}
 
-	/*
-	 * @Test public void testBuscarPorId() { Optional<Order> order =
-	 * this.orderService.buscarPorId(1L);
-	 * 
-	 * assertTrue(order.isPresent()); }
-	 */
+	@Test
+	public void testBuscarPorId() {
+		Optional<Order> order = this.orderService.buscarPorId(1L);
+
+		assertTrue(order.isPresent());
+	}
+
 }
