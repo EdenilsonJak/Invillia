@@ -123,7 +123,13 @@ public class PaymentController {
 			result.addError(new ObjectError("Pedido", "Pedido não encontrado. ID inexistente."));
 		}
 		
-		
+		if(!cadastroPaymentDto.getId().isPresent()) {
+			Optional<Payment> payment = this.paymentService.buscarPorOrderId(cadastroPaymentDto.getOrderId());
+			if(payment.isPresent()) {
+				result.addError(new ObjectError("Payment", "Já existe um pagamento para este order."));
+			}	
+		}
+
 	}
 
 	private CadastroPaymentDto converterStoreDto(Payment payment) {
