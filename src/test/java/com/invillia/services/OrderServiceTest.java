@@ -26,23 +26,24 @@ import com.invillia.status.OrderStatus;
 @SpringBootTest
 @ActiveProfiles("test")
 public class OrderServiceTest {
-	
+
 	@MockBean
 	private OrderRepository orderRepository;
-	
+
 	@Autowired
 	private OrderService orderService;
-	
-	private static final String nome = "av. moaçara";
-	
+
+	private static final String nome = "Av. moaçara";
+
 	@Before
-	public void setUp() throws Exception{
+	public void setUp() throws Exception {
+		BDDMockito.given(this.orderRepository.save(Mockito.any(Order.class))).willReturn(obterDadosOrder());
 		BDDMockito.given(this.orderService.buscarPorEndereco(Mockito.anyString())).willReturn(obterDadosOrder());
-		BDDMockito.given(this.orderRepository.save(Mockito.any(Order.class))).willReturn(new Order());
-		BDDMockito.given(this.orderRepository.findByEndereco(Mockito.anyString())).willReturn(new Order());
-		BDDMockito.given(this.orderRepository.findById(Mockito.any())).toString();
+		// BDDMockito.given(this.orderRepository.findByEndereco(Mockito.anyString())).willReturn(new
+		// Order());
+		//BDDMockito.given(this.orderService.buscarPorId(Mockito.anyString())).willReturn(obterDadosOrder());
 	}
-	
+
 	private Order obterDadosOrder() {
 		Order order = new Order();
 		order.setId(1L);
@@ -56,26 +57,26 @@ public class OrderServiceTest {
 	 * @Test public void testBuscarStoreNome() { Optional<Store> store =
 	 * this.storeService.buscarPorNome(nome); assertTrue(store.isPresent()); }
 	 */
-	
+
 	@Test
 	public void testPersistirOrder() {
 		Order order = this.orderService.persistir(new Order());
-		
+
 		assertNotNull(order);
 	}
-	
+
 	@Test
 	public void testBuscarPorEndereco() {
 		Order order = this.orderService.buscarPorEndereco("av. moaçara");
-		
+
 		assertEquals(nome, order.getEndereco());
 	}
 
 	@Test
 	public void testBuscarPorId() {
 		Optional<Order> order = this.orderService.buscarPorId(1L);
-		
+
 		assertTrue(order.isPresent());
 	}
-	
+
 }
